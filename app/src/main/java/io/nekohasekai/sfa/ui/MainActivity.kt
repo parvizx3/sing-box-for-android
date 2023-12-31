@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.VpnService
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -33,8 +35,10 @@ import io.nekohasekai.sfa.database.Settings
 import io.nekohasekai.sfa.database.TypedProfile
 import io.nekohasekai.sfa.databinding.ActivityMainBinding
 import io.nekohasekai.sfa.ktx.errorDialogBuilder
+import io.nekohasekai.sfa.ui.main.OutRootFragment
 import io.nekohasekai.sfa.ui.profile.NewProfileActivity
 import io.nekohasekai.sfa.ui.shared.AbstractActivity
+import io.nekohasekai.sfa.utils.HTTPClient
 import io.nekohasekai.sfa.vendor.Vendor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,14 +67,11 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
         setContentView(binding.root)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_my)
-        navController.navigate(R.id.navigation_dashboard)
+        navController.navigate(R.id.navigation_outroot)
         val appBarConfiguration =
             AppBarConfiguration(
                 setOf(
-                    R.id.navigation_dashboard,
-                    R.id.navigation_log,
-                    R.id.navigation_configuration,
-                    R.id.navigation_settings,
+                    R.id.navigation_outroot
                 )
             )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -78,6 +79,18 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
 
         reconnect()
         startIntegration()
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                runCatching {
+                    addConfig()
+                }.onFailure {
+                    withContext(Dispatchers.Main) {
+                        errorDialogBuilder(it).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -344,6 +357,51 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
     override fun onDestroy() {
         connection.disconnect()
         super.onDestroy()
+    }
+
+    private suspend fun addConfig(){
+        //showLoading()
+        Thread.sleep((1000..3000).random().toLong())
+        runOnUiThread {
+            findViewById<ImageView>(R.id.ellipse).isClickable = false
+            val txt = findViewById<TextView>(R.id.statusText)
+            txt.text = "Loading."}
+        Thread.sleep((2000..3000).random().toLong())
+        runOnUiThread {
+            val txt = findViewById<TextView>(R.id.statusText)
+            txt.text = "Loading.."}
+        ProfileManager.delete(ProfileManager.list())
+        val typedProfile = TypedProfile()
+        val profile = Profile(name = "Best Location", typed = typedProfile)
+        profile.userOrder = 0L
+        typedProfile.type = TypedProfile.Type.Remote
+        val configDirectory = File(filesDir, "configs").also { it.mkdirs() }
+        val configFile = File(configDirectory, "${profile.userOrder}.json")
+        val remoteURL = "https://raw.githubusercontent.com/boobs4free/sub/main/mix.json"
+        val content = HTTPClient().use { it.getString(remoteURL) }
+        Libbox.checkConfig(content)
+        configFile.writeText(content)
+        typedProfile.path = configFile.path
+        typedProfile.remoteURL = remoteURL
+        typedProfile.lastUpdated = Date()
+        typedProfile.autoUpdate = true
+        typedProfile.autoUpdateInterval = 60
+        val pp = ProfileManager.create(profile)
+        Settings.selectedProfile = pp.id
+        // Stuff that updates the UI
+        //val frag = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_my)
+        //Thread.sleep((2000..3000).random().toLong())
+        Thread.sleep((1000..3000).random().toLong())
+        runOnUiThread {
+            val txt = findViewById<TextView>(R.id.statusText)
+            txt.text = "Loading..."}
+        Thread.sleep((2000..3000).random().toLong())
+        runOnUiThread {
+            val txt = findViewById<TextView>(R.id.statusText)
+            txt.text = "Ready to Connect"
+            findViewById<ImageView>(R.id.ellipse).isClickable = true}
+        //hideLoading()
+        reconnect()
     }
 
 }

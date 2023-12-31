@@ -15,8 +15,8 @@ fun Context.errorDialogBuilder(@StringRes messageId: Int): MaterialAlertDialogBu
 fun Context.errorDialogBuilder(message: String): MaterialAlertDialogBuilder {
     return MaterialAlertDialogBuilder(this)
         .setTitle(R.string.error_title)
-        .setMessage(message)
-        .setPositiveButton(android.R.string.ok, null)
+//        .setMessage(message)
+//        .setPositiveButton(android.R.string.ok, null)
 }
 
 fun Context.errorDialogBuilder(exception: Throwable): MaterialAlertDialogBuilder {
