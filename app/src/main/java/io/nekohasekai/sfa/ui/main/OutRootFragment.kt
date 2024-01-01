@@ -86,7 +86,7 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
 
                     // Color animation to change color
                     ValueAnimator.ofArgb(
-                        Color.parseColor("#404040"), // Original color
+                        Color.parseColor("#ffffff"), // Original color
                         Color.parseColor("#2B73FF") // New color
                     ).apply {
                         duration = 500
@@ -127,7 +127,7 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
 
                         // Color animation to change color
                         ValueAnimator.ofArgb(
-                            Color.parseColor("#404040"), // Original color
+                            Color.parseColor("#ffffff"), // Original color
                             Color.parseColor("#2B73FF") // New color
                         ).apply {
                             duration = 500
@@ -150,7 +150,7 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
                         // Color animation to revert color
                         ValueAnimator.ofArgb(
                             Color.parseColor("#F03A50"),
-                            Color.parseColor("#404040") // Original color
+                            Color.parseColor("#ffffff") // Original color
                         ).apply {
                             duration = 500
                             addUpdateListener { animator -> binding.ellipse.setColorFilter(animator.animatedValue as Int) }
