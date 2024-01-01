@@ -68,6 +68,7 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_my)
         navController.navigate(R.id.navigation_outroot)
+        supportActionBar?.hide()
         val appBarConfiguration =
             AppBarConfiguration(
                 setOf(
@@ -363,9 +364,14 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
         //showLoading()
         Thread.sleep((1000..3000).random().toLong())
         runOnUiThread {
-            findViewById<ImageView>(R.id.ellipse).isClickable = false
-            val txt = findViewById<TextView>(R.id.statusText)
-            txt.text = "Loading."}
+            try {
+                findViewById<ImageView>(R.id.ellipse).isClickable = false
+                val txt = findViewById<TextView>(R.id.statusText)
+                txt.text = "Loading."
+            }catch (e: Exception){
+
+            }
+}
         Thread.sleep((2000..3000).random().toLong())
         runOnUiThread {
             val txt = findViewById<TextView>(R.id.statusText)
@@ -397,9 +403,14 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
             txt.text = "Loading..."}
         Thread.sleep((2000..3000).random().toLong())
         runOnUiThread {
-            val txt = findViewById<TextView>(R.id.statusText)
-            txt.text = "Ready to Connect"
-            findViewById<ImageView>(R.id.ellipse).isClickable = true}
+            try {
+                val txt = findViewById<TextView>(R.id.statusText)
+                txt.text = "Ready to Connect"
+                findViewById<ImageView>(R.id.ellipse).isClickable = true
+            } catch (e: Exception){
+
+        }
+        }
         //hideLoading()
         reconnect()
     }

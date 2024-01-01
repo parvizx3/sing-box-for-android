@@ -2,12 +2,14 @@ package io.nekohasekai.sfa.ui.main
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColor
 import androidx.core.view.isVisible
@@ -20,6 +22,7 @@ import io.nekohasekai.libbox.Libbox
 import io.nekohasekai.sfa.R
 import io.nekohasekai.sfa.bg.BoxService
 import io.nekohasekai.sfa.constant.Status
+import io.nekohasekai.sfa.database.GlobalVariables
 import io.nekohasekai.sfa.database.ProfileManager
 import io.nekohasekai.sfa.database.Settings
 import io.nekohasekai.sfa.databinding.FragmentDashboardBinding
@@ -72,16 +75,7 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
                 }
 
                 Status.Started -> {
-                    GlobalScope.launch {
-                        withContext(Dispatchers.IO) {
-                            runCatching {
-                                Libbox.newStandaloneCommandClient().setSystemProxyEnabled(true)
-                                val gg = ProfileManager.list()[0]
-                                Settings.selectedProfile  = gg.id
-                                binding.locationText.text = gg.name
-                            }
-                        }
-                    }
+                    binding.locationText.text = GlobalVariables.location
                     binding.imageView1.isClickable = true
                     binding.statusText.text = "Connected"
                     // Move to the right and change color
@@ -162,6 +156,8 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
                             addUpdateListener { animator -> binding.ellipse.setColorFilter(animator.animatedValue as Int) }
                             start()
                         }
+                        GlobalVariables.location = "Best Location"
+                        binding.locationText.text = "Best Location"
                     }
 
                     else -> {}

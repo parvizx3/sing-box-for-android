@@ -21,6 +21,7 @@ import io.nekohasekai.libbox.OutboundGroup
 import io.nekohasekai.libbox.OutboundGroupItem
 import io.nekohasekai.sfa.R
 import io.nekohasekai.sfa.constant.Status
+import io.nekohasekai.sfa.database.GlobalVariables
 import io.nekohasekai.sfa.database.Profile
 import io.nekohasekai.sfa.database.ProfileManager
 import io.nekohasekai.sfa.database.Settings
@@ -268,19 +269,13 @@ class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
                                 binding.root.context.errorDialogBuilder(it).show()
                             }
                         }
-                        withContext(Dispatchers.IO) {
-                            runCatching {
-                                val pp = ProfileManager.list()[0]
-                                ProfileManager.update(Profile(pp.id, name = binding.itemName.text.toString().split("|")[0]))
-                            }
-                        }
                     }
-
+                    GlobalVariables.location = binding.itemName.text.toString().split("|")[0]
                 }
             }
             binding.selectedView.isInvisible = group.selected != item.tag
             binding.itemName.text = item.tag
-            binding.itemType.text = Libbox.proxyDisplayType(item.type)
+            binding.itemType.visibility = View.GONE
             binding.itemStatus.isVisible = item.urlTestTime > 0
             if (item.urlTestTime > 0) {
                 binding.itemStatus.text = "${item.urlTestDelay}ms"
