@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="io.nekohasekai.sfa.ui.main.SettingsFragment"
+        android:name="io.nekohasekai.sfa.ui.main.OutRootSettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_out_root_settings" />
 
     <fragment
         android:id="@+id/navigation_groups"

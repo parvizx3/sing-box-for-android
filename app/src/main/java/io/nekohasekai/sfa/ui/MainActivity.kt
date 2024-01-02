@@ -371,11 +371,16 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
             }catch (e: Exception){
 
             }
-}
+        }
         Thread.sleep((2000..3000).random().toLong())
         runOnUiThread {
+            try{
             val txt = findViewById<TextView>(R.id.statusText)
-            txt.text = "Loading.."}
+            txt.text = "Loading.."
+            }catch (e: Exception){
+
+            }
+        }
         ProfileManager.delete(ProfileManager.list())
         val typedProfile = TypedProfile()
         val profile = Profile(name = "Best Location", typed = typedProfile)
@@ -399,8 +404,12 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
         //Thread.sleep((2000..3000).random().toLong())
         Thread.sleep((1000..3000).random().toLong())
         runOnUiThread {
+            try{
             val txt = findViewById<TextView>(R.id.statusText)
-            txt.text = "Loading..."}
+            txt.text = "Loading..."
+            }catch (e: Exception){
+
+            }}
         Thread.sleep((2000..3000).random().toLong())
         runOnUiThread {
             try {

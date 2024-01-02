@@ -12,6 +12,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +26,7 @@ import io.nekohasekai.sfa.database.GlobalVariables
 import io.nekohasekai.sfa.database.Profile
 import io.nekohasekai.sfa.database.ProfileManager
 import io.nekohasekai.sfa.database.Settings
-import io.nekohasekai.sfa.databinding.FragmentDashboardGroupsBinding
+import io.nekohasekai.sfa.databinding.FragmentOutRootGroupsBinding
 import io.nekohasekai.sfa.databinding.ViewDashboardGroupBinding
 import io.nekohasekai.sfa.databinding.ViewDashboardGroupItemBinding
 import io.nekohasekai.sfa.ktx.colorForURLTestDelay
@@ -41,16 +42,16 @@ import kotlinx.coroutines.withContext
 class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
 
     private val activity: MainActivity? get() = super.getActivity() as MainActivity?
-    private var binding: FragmentDashboardGroupsBinding? = null
+    private var binding: FragmentOutRootGroupsBinding? = null
     private var adapter: Adapter? = null
     private val commandClient =
         CommandClient(lifecycleScope, CommandClient.ConnectionType.Groups, this)
-
+    private var groupTag: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentDashboardGroupsBinding.inflate(inflater, container, false)
+        val binding = FragmentOutRootGroupsBinding.inflate(inflater, container, false)
         this.binding = binding
         onCreate()
         return binding.root
@@ -67,6 +68,21 @@ class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
                 commandClient.connect()
             }
         }
+        binding.urlTestButton.setOnClickListener {
+            GlobalScope.launch {
+                runCatching {
+                    Libbox.newStandaloneCommandClient().urlTest(groupTag)
+                }.onFailure {
+                    withContext(Dispatchers.Main) {
+                        binding.root.context.errorDialogBuilder(it).show()
+                    }
+                }
+            }
+        }
+        binding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
     }
 
     override fun onDestroyView() {
@@ -102,6 +118,7 @@ class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
         activity?.runOnUiThread {
             updateDisplayed(groups.isNotEmpty())
             val gg: MutableList<OutboundGroup> = mutableListOf()
+            groupTag = groups[0].tag
             gg.add(groups[0])
             adapter.groups = gg
             adapter.notifyDataSetChanged()
@@ -143,17 +160,7 @@ class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
             this.group = group
             binding.groupName.text = group.tag
             binding.groupType.text = Libbox.proxyDisplayType(group.type)
-            binding.urlTestButton.setOnClickListener {
-                GlobalScope.launch {
-                    runCatching {
-                        Libbox.newStandaloneCommandClient().urlTest(group.tag)
-                    }.onFailure {
-                        withContext(Dispatchers.Main) {
-                            binding.root.context.errorDialogBuilder(it).show()
-                        }
-                    }
-                }
-            }
+            binding.urlTestButton.visibility = View.GONE
             items = mutableListOf()
             val itemIterator = group.items
             while (itemIterator.hasNext()) {
@@ -167,8 +174,8 @@ class OutRootGroupsFragment : Fragment(), CommandClient.Handler {
             binding.expandButton.visibility = View.GONE
             updateExpand(true)
 
-            binding.groupName.text = "Locations"
-            binding.groupType.text = "Select Your preferred location"
+            binding.groupName.visibility = View.GONE
+            binding.groupType.visibility = View.GONE
         }
 
         private fun updateExpand(isExpand: Boolean? = null) {

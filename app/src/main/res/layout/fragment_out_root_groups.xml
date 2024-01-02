@@ -1,14 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.OutRootGroupsFragment">
 
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/status_default"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/space_grotesk_medium"
+        android:gravity="center"
+        android:text="Select Location"
+        android:textSize="60px"
+        app:layout_constraintLeft_toRightOf="@+id/backButton"
+        app:layout_constraintRight_toLeftOf="@+id/urlTestButton"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="36.5dp"/>
+
+    <ImageButton
+        android:id="@+id/urlTestButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?colorSurface"
+        android:contentDescription="@string/urltest"
+        android:src="@drawable/ic_electric_bolt_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?colorControlNormal"
+        android:layout_marginTop="30dp"/>
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?colorSurface"
+        android:contentDescription="back button"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?colorControlNormal"
+        android:layout_marginTop="30dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemList"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="30dp"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
