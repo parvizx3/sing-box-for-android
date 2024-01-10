@@ -84,7 +84,22 @@ class MainActivity : AbstractActivity(), ServiceConnection.Callback {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 runCatching {
-                    addConfig()
+                    if(ProfileManager.list().isEmpty()){
+                        addConfig()
+                    }else{
+                        try {
+                            val profile = ProfileManager.list()[0]
+                            val content = HTTPClient().use { it.getString(profile.typed.remoteURL) }
+                            Libbox.checkConfig(content)
+                            File(profile.typed.path).writeText(content)
+                            profile.typed.lastUpdated = Date()
+                            ProfileManager.update(profile)
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                errorDialogBuilder(e).show()
+                            }
+                        }
+                    }
                 }.onFailure {
                     withContext(Dispatchers.Main) {
                         errorDialogBuilder(it).show()
