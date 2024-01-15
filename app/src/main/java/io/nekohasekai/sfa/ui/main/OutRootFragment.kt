@@ -28,6 +28,7 @@ import io.nekohasekai.sfa.database.Settings
 import io.nekohasekai.sfa.databinding.FragmentDashboardBinding
 import io.nekohasekai.sfa.databinding.FragmentOutRootBinding
 import io.nekohasekai.sfa.ktx.errorDialogBuilder
+import io.nekohasekai.sfa.ktx.launchCustomTab
 import io.nekohasekai.sfa.ui.MainActivity
 import io.nekohasekai.sfa.ui.dashboard.GroupsFragment
 import io.nekohasekai.sfa.ui.dashboard.OverviewFragment
@@ -163,6 +164,9 @@ class OutRootFragment : Fragment(R.layout.fragment_out_root) {
                     else -> {}
                 }
 
+        }
+        binding.imageView4.setOnClickListener {
+            it.context.launchCustomTab("https://t.me/OutRootVPN/2")
         }
     }
     override fun onDestroyView() {

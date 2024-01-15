@@ -106,10 +106,10 @@ class OutRootSettingsFragment : Fragment() {
             startActivity(Intent(requireContext(), ProfileOverrideActivity::class.java))
         }
         binding.communityButton.setOnClickListener {
-            it.context.launchCustomTab("https://community.sagernet.org/")
+            it.context.launchCustomTab("https://t.me/OutRootVPN")
         }
         binding.documentationButton.setOnClickListener {
-            it.context.launchCustomTab("http://sing-box.sagernet.org/installation/clients/sfa/")
+            it.context.launchCustomTab("https://t.me/OutRootVPN/2")
         }
         binding.openDebugButton.setOnClickListener {
             startActivity(Intent(requireContext(), DebugActivity::class.java))
